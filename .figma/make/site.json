@@ -1,0 +1,10 @@
+{
+  "description": "Manage multiple retail locations with a unified point-of-sale system that integrates customer data, handles inventory, and processes payments seamlessly.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
