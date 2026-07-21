@@ -1,8 +1,9 @@
 import { useState } from 'react'
-import { Lock, User, Zap } from 'lucide-react'
+import { Lock, Mail, Zap } from 'lucide-react'
+import { authenticate, type SystemUser } from '../data/auth'
 
 interface LoginProps {
-  onLogin: (user: { name: string; role: string; email: string }) => void
+  onLogin: (user: SystemUser) => void
 }
 
 export default function Login({ onLogin }: LoginProps) {
@@ -17,30 +18,28 @@ export default function Login({ onLogin }: LoginProps) {
     if (!email || !password) { setError('Preencha todos os campos.'); return }
     setLoading(true)
     setTimeout(() => {
-      if (email === 'wspeedpr@gmail.com' && password === 'p1p2c4cxcx') {
-        onLogin({ name: 'Super Administrador', role: 'superadmin', email })
+      const user = authenticate(email, password)
+      if (user) {
+        onLogin(user)
       } else {
-        setError('E-mail ou senha inválidos.')
+        setError('E-mail ou senha inválidos, ou usuário inativo.')
         setLoading(false)
       }
-    }, 800)
+    }, 700)
   }
 
   return (
     <div className="min-h-screen bg-[#0A0A0F] flex items-center justify-center relative overflow-hidden">
-      {/* Grid background */}
       <div className="absolute inset-0"
         style={{
           backgroundImage: 'linear-gradient(rgba(99,102,241,0.06) 1px,transparent 1px),linear-gradient(90deg,rgba(99,102,241,0.06) 1px,transparent 1px)',
           backgroundSize: '40px 40px',
         }}
       />
-      {/* Glow orbs */}
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-violet-600/10 rounded-full blur-3xl pointer-events-none" />
 
       <div className="relative z-10 w-full max-w-md px-6">
-        {/* Logo */}
         <div className="text-center mb-10">
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-indigo-600/20 border border-indigo-500/30 mb-5">
             <Zap className="w-8 h-8 text-indigo-400" />
@@ -49,7 +48,6 @@ export default function Login({ onLogin }: LoginProps) {
           <p className="text-slate-400 mt-1 text-sm">Sistema de Gestão Multi-Lojas · WSpeed</p>
         </div>
 
-        {/* Card */}
         <div className="bg-[#111118] border border-white/8 rounded-2xl p-8 shadow-2xl">
           <h2 className="text-lg font-semibold text-white mb-6">Entrar na conta</h2>
 
@@ -63,7 +61,7 @@ export default function Login({ onLogin }: LoginProps) {
             <div>
               <label className="block text-xs font-medium text-slate-400 mb-1.5 uppercase tracking-wider">E-mail</label>
               <div className="relative">
-                <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+                <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
                 <input
                   type="email"
                   value={email}

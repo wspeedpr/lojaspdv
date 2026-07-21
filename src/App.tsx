@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import Login from './views/Login'
 import StoreSelect from './views/StoreSelect'
 import Dashboard from './views/Dashboard'
@@ -10,30 +10,27 @@ import Comissoes from './views/Comissoes'
 import SGP from './views/SGP'
 import Config from './views/Config'
 import Faturas from './views/Faturas'
+import Usuarios from './views/Usuarios'
 import Sidebar, { type View } from './components/Sidebar'
 import type { Store } from './data/mockData'
+import type { SystemUser } from './data/auth'
 
 type Screen = 'login' | 'store-select' | 'app'
 
-interface User {
-  name: string
-  role: string
-  email: string
-}
-
 export default function App() {
-  const savedUser = (() => { try { return JSON.parse(localStorage.getItem('pdv_user') || 'null') } catch { return null } })()
-  const savedStore = (() => { try { return JSON.parse(localStorage.getItem('pdv_store') || 'null') } catch { return null } })()
+  const savedUser: SystemUser | null = (() => { try { return JSON.parse(localStorage.getItem('pdv_user') || 'null') } catch { return null } })()
+  const savedStore: Store | null = (() => { try { return JSON.parse(localStorage.getItem('pdv_store') || 'null') } catch { return null } })()
   const initialScreen: Screen = savedUser && savedStore ? 'app' : savedUser ? 'store-select' : 'login'
 
   const [screen, setScreen] = useState<Screen>(initialScreen)
-  const [user, setUser] = useState<User | null>(savedUser)
+  const [user, setUser] = useState<SystemUser | null>(savedUser)
   const [store, setStore] = useState<Store | null>(savedStore)
   const [view, setView] = useState<View>('dashboard')
 
-  const handleLogin = (u: User) => {
+  const handleLogin = (u: SystemUser) => {
     setUser(u)
     localStorage.setItem('pdv_user', JSON.stringify(u))
+    // superadmin com acesso a todas as lojas vai direto para seleção
     setScreen('store-select')
   }
 
@@ -77,9 +74,9 @@ export default function App() {
       comissoes: <Comissoes store={store} />,
       sgp: <SGP store={store} />,
       config: <Config store={store} />,
+      usuarios: <Usuarios />,
     }
 
-    // PDV and CRM get full-height treatment (no scroll wrapper)
     const fullHeight = view === 'pdv' || view === 'crm'
 
     return (
