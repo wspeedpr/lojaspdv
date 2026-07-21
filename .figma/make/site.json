@@ -1,5 +1,6 @@
 {
-  "description": "Manage multiple retail locations with a unified point-of-sale system that integrates customer data, handles inventory, and processes payments seamlessly.",
+  "title": "João System",
+  "description": "Sistema de Gestão Multi-Lojas - WSpeed Sistemas PDV",
   "robots": {
     "index": false
   },
